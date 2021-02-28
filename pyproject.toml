@@ -10,6 +10,9 @@ aiogram = "^2.9.2"
 pydantic = "^1.6.1"
 python-dotenv = "^0.14.0"
 dateparser = "^0.7.6"
+databases = {version = "^0.4.1", extras = ["postgresql"]}
+alembic = "^1.5.5"
+psycopg2 = "^2.8.6"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
