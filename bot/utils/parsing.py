@@ -1,0 +1,25 @@
+import re
+from datetime import date, datetime
+from typing import Optional, Tuple
+
+import dateparser
+
+
+def parse_amount_and_comment(text: str) -> Tuple[Optional[str], Optional[str]]:
+    amount = parse_amount(text)
+    comment = text.replace(amount, '').strip() if amount is not None else None
+
+    return amount, comment
+
+
+def parse_amount(text: str) -> Optional[str]:
+    pattern = r'(\d+[\.\,]?\d*)'
+    result = re.search(pattern, text)
+
+    if result is not None:
+        return result.group(0).replace(',', '.')
+
+
+def parse_date(text: str) -> Optional[date]:
+    parsed_datetime = dateparser.parse(text, languages=['ru'])
+    return parsed_datetime.date() if parsed_datetime is not None else None
