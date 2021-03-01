@@ -3,7 +3,7 @@ import logging
 from aiogram import executor
 from alembic.util import Dispatcher
 
-from bot.dispatcher import dispatcher, register_handlers
+from bot.dispatcher import dispatcher, register_handlers, register_middlewares
 from db import database
 
 logging.basicConfig(level=logging.INFO)
@@ -11,6 +11,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def on_startup(dp: Dispatcher):
     register_handlers(dp)
+    register_middlewares(dp)
     await database.connect()
 
 

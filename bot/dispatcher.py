@@ -3,6 +3,7 @@ from aiogram.dispatcher import filters
 
 from . import handlers
 from .bot import bot
+from .middlewares import UserMiddleware
 from .resources import buttons
 from .states import AddExpense
 from .storage import storage
@@ -19,3 +20,7 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(handlers.add_expense_amount_and_comment, state=AddExpense.amount_and_comment)
     dp.register_message_handler(handlers.add_expense_date, state=AddExpense.date)
     dp.register_message_handler(handlers.add_expense_category, state=AddExpense.category)
+
+
+def register_middlewares(dp: Dispatcher):
+    dp.middleware.setup(UserMiddleware())
