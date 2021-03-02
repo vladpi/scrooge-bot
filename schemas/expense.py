@@ -4,16 +4,18 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from bot.resources import messages
-
 
 class ExpenseSchema(BaseModel):
+    id: int
+    user_id: int
     amount: Decimal
     comment: Optional[str]
     on_date: date
     category: str
 
     def __str__(self):
+        from bot.resources import messages  # FIXME
+
         parts = [
             part
             for part in [
