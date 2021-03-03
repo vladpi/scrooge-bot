@@ -3,7 +3,7 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemo
 from bot import bot
 from bot.const import CATEGORIES
 from bot.resources import buttons, messages
-from schemas.expense import ExpenseSchema
+from schemas.transaction import TransactionSchema
 
 from .main import main_menu
 
@@ -56,6 +56,6 @@ async def select_category(to_chat_id: int):
     )
 
 
-async def expense_created(to_chat_id: int, expense: ExpenseSchema):
+async def expense_created(to_chat_id: int, expense: TransactionSchema):
     text = messages.EXPENSE_CREATED.format(expense_card=str(expense))
     await main_menu(to_chat_id, text=text)

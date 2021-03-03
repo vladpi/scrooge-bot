@@ -4,10 +4,13 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from const import TransactionType
 
-class ExpenseSchema(BaseModel):
+
+class TransactionSchema(BaseModel):
     id: int
     user_id: int
+    type: TransactionType
     amount: Decimal
     comment: Optional[str]
     on_date: date
@@ -20,9 +23,7 @@ class ExpenseSchema(BaseModel):
             part
             for part in [
                 messages.EXPENSE_AMOUNT.format(amount=self.amount),
-                messages.EXPENSE_COMMENT.format(comment=self.comment)
-                if self.comment
-                else None,
+                messages.EXPENSE_COMMENT.format(comment=self.comment) if self.comment else None,
                 messages.EXPENSE_DATE.format(date=self.on_date),
                 messages.EXPENSE_CATEGORY.format(category=self.category),
             ]

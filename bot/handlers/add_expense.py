@@ -9,7 +9,8 @@ from bot import views
 from bot.resources import buttons
 from bot.states import AddExpense
 from bot.utils import parsing
-from services.expenses import expense_service
+from const import TransactionType
+from services.transactions import transaction_service
 
 if TYPE_CHECKING:
     from schemas.user import UserSchema
@@ -70,7 +71,11 @@ async def add_expense_category(message: types.Message, state: FSMContext, user: 
     async with state.proxy() as proxy:
         proxy['expense']['category'] = category
 
-        expense = await expense_service.create(user_id=user.id, **proxy.pop('expense'))
+        expense = await transaction_service.create(
+            user_id=user.id,
+            type=TransactionType.EXPENSE,
+            **proxy.pop('expense'),
+        )
 
     await views.add_expense.expense_created(message.chat.id, expense)
     await state.finish()
