@@ -3,6 +3,7 @@ from aiogram.dispatcher import filters
 
 from . import handlers
 from .bot import bot
+from .const import history_cb
 from .middlewares import UserMiddleware
 from .resources import buttons
 from .states import AddExpense
@@ -20,6 +21,10 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(handlers.add_expense_amount_and_comment, state=AddExpense.amount_and_comment)
     dp.register_message_handler(handlers.add_expense_date, state=AddExpense.date)
     dp.register_message_handler(handlers.add_expense_category, state=AddExpense.category)
+
+    # History
+    dp.register_message_handler(handlers.history_entry, filters.Text(equals=buttons.HISTORY))
+    dp.register_callback_query_handler(handlers.history_page, history_cb.filter())
 
 
 def register_middlewares(dp: Dispatcher):

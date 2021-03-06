@@ -1,3 +1,5 @@
+from aiogram.utils.callback_data import CallbackData
+
 CATEGORIES = [
     'Жилье',
     'Продукты и быт',
@@ -11,3 +13,5 @@ CATEGORIES = [
     'Медицина',
     'Кредиты',
 ]
+
+history_cb = CallbackData('history', 'page')
