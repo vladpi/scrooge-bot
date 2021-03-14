@@ -18,8 +18,8 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from config import settings
-from db.metadata import metadata
-from db.tables import *  # noqa
+from modules.db.metadata import metadata
+from modules.db.tables import *  # noqa
 
 config.set_main_option('sqlalchemy.url', str(settings.DB_URL))
 target_metadata = metadata

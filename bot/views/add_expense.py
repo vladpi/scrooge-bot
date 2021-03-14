@@ -3,7 +3,7 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemo
 from bot import bot
 from bot.const import CATEGORIES
 from bot.resources import buttons, messages
-from schemas.transaction import TransactionSchema
+from modules.transactions import TransactionSchema
 
 from .main import main_menu
 

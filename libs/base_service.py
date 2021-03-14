@@ -1,4 +1,4 @@
-from db import database
+from modules.db import database
 
 
 class BaseDBService:

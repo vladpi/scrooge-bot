@@ -4,7 +4,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from bot import bot
 from bot.const import history_cb
-from schemas.transaction import TransactionSchema
+from modules.transactions import TransactionSchema
 
 
 async def history(

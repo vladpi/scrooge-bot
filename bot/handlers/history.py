@@ -6,10 +6,10 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from bot import views
-from services.transactions import transaction_service
+from modules.transactions import transaction_service
 
 if TYPE_CHECKING:
-    from schemas.user import UserSchema
+    from modules.users import UserSchema
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

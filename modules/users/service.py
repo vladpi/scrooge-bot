@@ -4,10 +4,10 @@ from typing import Optional
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert
 
-from db.tables import users
-from schemas.user import UserSchema
+from libs.base_service import BaseDBService
+from modules.db.tables import users
 
-from .base import BaseDBService
+from .schemas import UserSchema
 
 
 class UserService(BaseDBService):

@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
-from services.users import user_service
+from modules.users import user_service
 
 
 class UserMiddleware(BaseMiddleware):

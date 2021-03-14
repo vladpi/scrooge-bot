@@ -4,7 +4,7 @@ from aiogram import executor
 from alembic.util import Dispatcher
 
 from bot.dispatcher import dispatcher, register_handlers, register_middlewares
-from db import database
+from modules.db import database
 
 logging.basicConfig(level=logging.INFO)
 
