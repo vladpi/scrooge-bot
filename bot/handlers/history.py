@@ -6,7 +6,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from bot import views
-from modules.transactions import transaction_service
+from modules.transactions import count_transactions_by_user, get_transactions_by_user
 
 if TYPE_CHECKING:
     from modules.users import UserSchema
@@ -18,8 +18,8 @@ TRANSACTION_PER_PAGE = 50
 
 
 async def history_entry(message: types.Message, state: FSMContext, user: 'UserSchema'):
-    total = await transaction_service.count_for_user(user.id)
-    expenses = await transaction_service.get_for_user(user.id, limit=TRANSACTION_PER_PAGE)
+    total = await count_transactions_by_user(user.id)
+    expenses = await get_transactions_by_user(user.id, limit=TRANSACTION_PER_PAGE)
 
     if not expenses:
         # FIXME сообщение о пустых расходах
@@ -39,8 +39,8 @@ async def history_page(
 ):
     page = int(callback_data.get('page', 0))
 
-    total = await transaction_service.count_for_user(user.id)
-    expenses = await transaction_service.get_for_user(
+    total = await count_transactions_by_user(user.id)
+    expenses = await get_transactions_by_user(
         user.id,
         limit=TRANSACTION_PER_PAGE,
         offset=page * TRANSACTION_PER_PAGE,

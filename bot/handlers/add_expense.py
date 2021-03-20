@@ -9,9 +9,8 @@ from bot import views
 from bot.resources import buttons
 from bot.states import AddExpense
 from bot.utils import parsing
-from const import TransactionType
-from modules.accounts import account_service
-from modules.transactions import transaction_service
+from modules.accounts import get_user_accounts
+from modules.transactions import create_expense_transaction
 
 if TYPE_CHECKING:
     from modules.users import UserSchema
@@ -72,12 +71,11 @@ async def add_expense_category(message: types.Message, state: FSMContext, user: 
     async with state.proxy() as proxy:
         proxy['expense']['category'] = category
 
-        account = (await account_service.get_by_user(user.id))[0]  # FIXME select account step
+        account = (await get_user_accounts(user.id))[0]  # FIXME select account step
 
-        expense = await transaction_service.create(
+        expense = await create_expense_transaction(
             user_id=user.id,
             account_id=account.id,
-            type_=TransactionType.EXPENSE,
             **proxy.pop('expense'),
         )
 

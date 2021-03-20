@@ -1,2 +1,2 @@
-from .service import account_service
-from .schemas import AccountSchema
+from .exports import *  # noqa
+from .schemas import AccountSchema  # noqa
