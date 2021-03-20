@@ -31,7 +31,8 @@ class TransactionService(BaseDBService):
     async def create(
         self,
         user_id: int,
-        type: TransactionType,
+        account_id: int,
+        type_: TransactionType,
         amount: Decimal,
         comment: Optional[str],
         on_date: date,
@@ -41,7 +42,8 @@ class TransactionService(BaseDBService):
             insert(transactions)
             .values(
                 user_id=user_id,
-                type=type,
+                account_id=account_id,
+                type=type_,
                 amount=amount,
                 comment=comment,
                 on_date=on_date,

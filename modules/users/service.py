@@ -11,16 +11,18 @@ from .schemas import UserSchema
 
 
 class UserService(BaseDBService):
-    async def put(self, instance: 'UserSchema') -> 'UserSchema':
-        query = (
-            insert(users)
-            .values(instance.dict())
-            .on_conflict_do_update(
+    async def put(
+        self,
+        instance: 'UserSchema',
+        allow_update: bool = True,
+    ) -> 'UserSchema':
+        query = insert(users).values(instance.dict()).returning(users)
+
+        if allow_update:
+            query = query.on_conflict_do_update(
                 index_elements=[users.c.id],
                 set_=instance.dict(exclude={'id', 'created_at'}),
             )
-            .returning(users)
-        )
 
         record = await self.db.fetch_one(query)
 
@@ -36,7 +38,7 @@ class UserService(BaseDBService):
         if record is not None:
             return UserSchema.parse_obj(record)
 
-    async def create_or_update(
+    async def create(
         self,
         id_: int,
         username: Optional[str] = None,
@@ -51,7 +53,7 @@ class UserService(BaseDBService):
             created_at=datetime.utcnow(),
         )
 
-        return await self.put(user)
+        return await self.put(user, allow_update=False)
 
 
 user_service = UserService()

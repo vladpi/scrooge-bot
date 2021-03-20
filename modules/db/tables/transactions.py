@@ -8,6 +8,7 @@ transactions = sa.Table(
     metadata,
     sa.Column('id', sa.BigInteger, primary_key=True, autoincrement=True),
     sa.Column('user_id', sa.ForeignKey('users.id'), nullable=False),
+    sa.Column('account_id', sa.ForeignKey('accounts.id'), nullable=False),
     sa.Column('type', sa.Enum(TransactionType), nullable=False),
     sa.Column('amount', sa.Numeric(scale=2), nullable=False),
     sa.Column('comment', sa.Text, nullable=True),
