@@ -3,9 +3,9 @@ from datetime import date, datetime, timedelta
 from typing import TYPE_CHECKING, Optional
 
 from aiogram import types
-from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher import FSMContext, filters
 
-from bot import views
+from bot import dispatcher, views
 from bot.resources import buttons
 from bot.states import AddExpense
 from bot.utils import parsing
@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
+@dispatcher.message_handler(filters.Text(equals=buttons.ADD_EXPENSE))
 async def add_expense_entry(message: types.Message, state: FSMContext):
     async with state.proxy() as proxy:
         proxy.setdefault('expense', {})
@@ -27,6 +28,7 @@ async def add_expense_entry(message: types.Message, state: FSMContext):
     await AddExpense.amount_and_comment.set()
 
 
+@dispatcher.message_handler(state=AddExpense.amount_and_comment)
 async def add_expense_amount_and_comment(message: types.Message, state: FSMContext):
     amount, comment = parsing.parse_amount_and_comment(message.text)
 
@@ -42,6 +44,7 @@ async def add_expense_amount_and_comment(message: types.Message, state: FSMConte
         await AddExpense.date.set()
 
 
+@dispatcher.message_handler(state=AddExpense.date)
 async def add_expense_date(message: types.Message, state: FSMContext):
     parsed_date: Optional[date]
 
@@ -65,6 +68,7 @@ async def add_expense_date(message: types.Message, state: FSMContext):
         await AddExpense.category.set()
 
 
+@dispatcher.message_handler(state=AddExpense.category)
 async def add_expense_category(message: types.Message, state: FSMContext, user: 'UserSchema'):
     category = message.text
 
