@@ -38,6 +38,8 @@ class UserService(BaseDBService):
         if record is not None:
             return UserSchema.parse_obj(record)
 
+        return None
+
     async def create(
         self,
         id_: int,

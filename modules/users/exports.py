@@ -12,7 +12,7 @@ async def create_or_update_user(
     username: Optional[str] = None,
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
-):
+) -> UserSchema:
     user = await user_service.get(id_)
 
     if user is None:

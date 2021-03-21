@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime
+from datetime import date
 from typing import Optional, Tuple
 
 import dateparser
@@ -18,6 +18,8 @@ def parse_amount(text: str) -> Optional[str]:
 
     if result is not None:
         return result.group(0).replace(',', '.')
+
+    return None
 
 
 def parse_date(text: str) -> Optional[date]:

@@ -1,6 +1,7 @@
 import sqlalchemy as sa
 
 from const import TransactionType
+
 from ..metadata import metadata
 
 transactions = sa.Table(

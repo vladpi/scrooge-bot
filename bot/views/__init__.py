@@ -1,1 +1,1 @@
-from . import add_expense, main, history
+from . import add_expense, history, main  # noqa

@@ -1,3 +1,9 @@
 from .bot import bot
-from .storage import storage
-from .dispatcher import dispatcher
+from .dispatcher import dispatcher, register_handlers, register_middlewares
+
+__all__ = [
+    'bot',
+    'dispatcher',
+    'register_handlers',
+    'register_middlewares',
+]

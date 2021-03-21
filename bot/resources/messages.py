@@ -10,7 +10,7 @@ WRONG_EXPENSE_DATE = 'Не вижу даты.\nПовтори в формате:
 SELECT_CATEGORY = 'Выбери категорию'
 SUCCESS_CATEGORY_SELECT = 'Сохранил категорию: {category}'
 EXPENSE_CREATED = 'Расход создан!\n\n' \
-                '{expense_card}'
+                  '{expense_card}'
 
 
 """ КАРТОЧКА РАСХОДА """

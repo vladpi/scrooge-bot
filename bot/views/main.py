@@ -18,7 +18,5 @@ async def main_menu(to_chat_id: int, text: Optional[str] = None):
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     await bot.send_message(
-        chat_id=to_chat_id,
-        text=text,
-        reply_markup=reply_markup,
+        chat_id=to_chat_id, text=text, reply_markup=reply_markup,
     )

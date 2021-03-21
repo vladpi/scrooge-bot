@@ -1,3 +1,3 @@
-from .accounts import accounts, accounts_users
-from .transactions import transactions
-from .users import users
+from .accounts import accounts, accounts_users  # noqa
+from .transactions import transactions  # noqa
+from .users import users  # noqa

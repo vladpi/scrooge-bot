@@ -54,6 +54,8 @@ class AccountService(BaseDBService):
         if record is not None:
             return AccountSchema.parse_obj(record)
 
+        return None
+
     async def add_user(self, id_: int, user_id: int) -> None:
         query = insert(accounts_users).values(
             account_id=id_,
