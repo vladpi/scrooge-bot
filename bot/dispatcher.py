@@ -1,31 +1,8 @@
-from aiogram import Dispatcher
-from aiogram.dispatcher import filters
+from aiogram import Bot, Dispatcher
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-from . import handlers
-from .bot import bot
-from .const import history_cb
-from .middlewares import UserMiddleware
-from .resources import buttons
-from .states import AddExpense
-from .storage import storage
+from config import settings
 
+bot = Bot(token=settings.BOT_TOKEN, parse_mode='html')
+storage = MemoryStorage()
 dispatcher = Dispatcher(bot, storage=storage)
-
-
-def register_handlers(dp: Dispatcher):
-    # Main
-    dp.register_message_handler(handlers.start, filters.CommandStart(), state='*')
-
-    # Add Expense
-    dp.register_message_handler(handlers.add_expense_entry, filters.Text(equals=buttons.ADD_EXPENSE))
-    dp.register_message_handler(handlers.add_expense_amount_and_comment, state=AddExpense.amount_and_comment)
-    dp.register_message_handler(handlers.add_expense_date, state=AddExpense.date)
-    dp.register_message_handler(handlers.add_expense_category, state=AddExpense.category)
-
-    # History
-    dp.register_message_handler(handlers.history_entry, filters.Text(equals=buttons.HISTORY))
-    dp.register_callback_query_handler(handlers.history_page, history_cb.filter())
-
-
-def register_middlewares(dp: Dispatcher):
-    dp.middleware.setup(UserMiddleware())

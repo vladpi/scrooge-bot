@@ -1,9 +1,6 @@
-from .bot import bot
-from .dispatcher import dispatcher, register_handlers, register_middlewares
+from .dispatcher import bot, dispatcher
 
 __all__ = [
     'bot',
     'dispatcher',
-    'register_handlers',
-    'register_middlewares',
 ]
