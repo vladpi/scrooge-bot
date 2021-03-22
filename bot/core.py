@@ -1,8 +1,13 @@
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.contrib.fsm_storage.redis import RedisStorage
 
 from config import settings
 
 bot = Bot(token=settings.BOT_TOKEN, parse_mode='html')
-storage = MemoryStorage()
+storage = RedisStorage(
+    host=settings.REDIS_URL.host,
+    port=settings.REDIS_URL.port,
+    password=settings.REDIS_URL.password,
+    db=int(settings.REDIS_URL.path.replace('/', '')),
+)
 dispatcher = Dispatcher(bot, storage=storage)

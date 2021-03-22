@@ -41,7 +41,7 @@ async def wrong_expense_amount(to_chat_id: int):
 
 async def add_expense_date(to_chat_id: int):
     keyboard = [
-        [KeyboardButton(buttons.TODAY), KeyboardButton(buttons.YESTERDAY)],
+        [KeyboardButton(buttons.YESTERDAY), KeyboardButton(buttons.TODAY)],
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 

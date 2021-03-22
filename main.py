@@ -15,5 +15,12 @@ async def on_startup(dp: Dispatcher):
     await database.connect()
 
 
+async def on_shutdown(dp: Dispatcher):
+    await dp.storage.close()
+    await dp.storage.wait_closed()
+
+
 if __name__ == '__main__':
-    executor.start_polling(dispatcher, on_startup=on_startup, skip_updates=True)
+    executor.start_polling(
+        dispatcher, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True,
+    )

@@ -1,12 +1,13 @@
 from typing import Optional
 
-from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn
+from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn, RedisDsn
 
 
 class Settings(BaseSettings):
     BOT_TOKEN: str = Field(env='BOT_TOKEN')
     WEBHOOK_HOST: Optional[HttpUrl] = Field(env='WEBHOOK_HOST')
-    DB_URL: PostgresDsn
+    DATABASE_URL: PostgresDsn
+    REDIS_URL: RedisDsn
 
     class Config:
         env_file = '.env'

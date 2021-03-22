@@ -85,7 +85,7 @@ async def add_expense_date(message: types.Message, state: FSMContext):
 
     else:
         async with state.proxy() as proxy:
-            proxy['expense']['on_date'] = parsed_date
+            proxy['expense']['on_date'] = parsed_date.strftime('%d.%m.%Y')
 
         await views.add_expense.select_category(message.chat.id)
         await AddExpense.category.set()
@@ -97,8 +97,6 @@ async def add_expense_category(message: types.Message, state: FSMContext, user: 
 
     async with state.proxy() as proxy:
         proxy['expense']['category'] = category
-
-        # account = (await get_user_accounts(user.id))[0]  # FIXME select account step
 
         expense = await create_expense_transaction(user_id=user.id, **proxy.pop('expense'))
 

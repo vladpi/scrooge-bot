@@ -19,7 +19,7 @@ from config import settings
 from modules.db.metadata import metadata
 from modules.db.tables import *  # noqa
 
-config.set_main_option('sqlalchemy.url', str(settings.DB_URL))
+config.set_main_option('sqlalchemy.url', str(settings.DATABASE_URL))
 target_metadata = metadata
 
 # other values from the config, defined by the needs of env.py,

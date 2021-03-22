@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from const import TransactionType
 
@@ -13,9 +13,12 @@ async def create_expense_transaction(
     account_id: int,
     amount: Decimal,
     comment: Optional[str],
-    on_date: date,
+    on_date: Union[date, str],
     category: str,
 ) -> TransactionSchema:
+    if isinstance(on_date, str):
+        on_date = datetime.strptime(on_date, '%d.%m.%Y').date()
+
     return await transaction_service.create(
         user_id=user_id,
         account_id=account_id,
