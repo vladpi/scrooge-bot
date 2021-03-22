@@ -1,14 +1,17 @@
-from typing import Optional, Dict
+from typing import Optional
 
 from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn, RedisDsn
 
 
 class SQLAlchemyPostgresDsn(PostgresDsn):
-    @classmethod
-    def validate_parts(cls, parts: Dict[str, str]) -> Dict[str, str]:
-        if parts['scheme'] == 'postgres':
-            parts['scheme'] = 'postgresql'
-        return super().validate_parts(parts)
+    def __init__(self, url, *args, **kwargs) -> None:
+        if url.startswith('postgres://'):
+            url = url.replace('postgres://', 'postgresql://')
+
+        if kwargs.get('scheme') == 'postgres':
+            kwargs['scheme'] = 'postgresql'
+
+        super().__init__(url, *args, **kwargs)
 
 
 class Settings(BaseSettings):
