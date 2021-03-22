@@ -1,11 +1,24 @@
+from typing import List
+
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
 from bot import bot
 from bot.const import CATEGORIES
 from bot.resources import buttons, messages
+from modules.accounts import AccountSchema
 from modules.transactions import TransactionSchema
 
 from .main import main_menu
+
+
+async def select_account(to_chat_id: int, accounts: List[AccountSchema]):
+    keyboard = [[KeyboardButton(account.name)] for account in accounts]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    await bot.send_message(
+        chat_id=to_chat_id,
+        text=messages.SELECT_ACCOUNT,
+        reply_markup=reply_markup,
+    )
 
 
 async def add_expense_amount(to_chat_id: int):

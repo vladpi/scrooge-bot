@@ -9,7 +9,7 @@ from bot import dispatcher, views
 from bot.resources import buttons
 from bot.states import AddExpense
 from bot.utils import parsing
-from modules.accounts import get_user_accounts
+from modules.accounts import get_user_account_by_name, get_user_accounts
 from modules.transactions import create_expense_transaction
 
 if TYPE_CHECKING:
@@ -20,9 +20,32 @@ logger.setLevel(logging.DEBUG)
 
 
 @dispatcher.message_handler(filters.Text(equals=buttons.ADD_EXPENSE))
-async def add_expense_entry(message: types.Message, state: FSMContext):
+async def add_expense_entry(message: types.Message, state: FSMContext, user: 'UserSchema'):
     async with state.proxy() as proxy:
         proxy.setdefault('expense', {})
+
+    accounts = await get_user_accounts(user.id)
+    if len(accounts) > 1:
+        await views.add_expense.select_account(message.chat.id, accounts)
+        await AddExpense.account.set()
+
+    else:
+        async with state.proxy() as proxy:
+            proxy['expense']['account_id'] = accounts[0].id
+
+        await views.add_expense.add_expense_amount(message.chat.id)
+        await AddExpense.amount_and_comment.set()
+
+
+@dispatcher.message_handler(state=AddExpense.account)
+async def add_expense_account(message: types.Message, state: FSMContext, user: 'UserSchema'):
+    account = await get_user_account_by_name(user.id, message.text)
+
+    if account is None:
+        return  # FIXME message
+
+    async with state.proxy() as proxy:
+        proxy['expense']['account_id'] = account.id
 
     await views.add_expense.add_expense_amount(message.chat.id)
     await AddExpense.amount_and_comment.set()
@@ -34,14 +57,14 @@ async def add_expense_amount_and_comment(message: types.Message, state: FSMConte
 
     if amount is None:
         await views.add_expense.wrong_expense_amount(message.chat.id)
+        return
 
-    else:
-        async with state.proxy() as proxy:
-            proxy['expense']['amount'] = amount
-            proxy['expense']['comment'] = comment
+    async with state.proxy() as proxy:
+        proxy['expense']['amount'] = amount
+        proxy['expense']['comment'] = comment
 
-        await views.add_expense.add_expense_date(message.chat.id)
-        await AddExpense.date.set()
+    await views.add_expense.add_expense_date(message.chat.id)
+    await AddExpense.date.set()
 
 
 @dispatcher.message_handler(state=AddExpense.date)
@@ -75,13 +98,9 @@ async def add_expense_category(message: types.Message, state: FSMContext, user: 
     async with state.proxy() as proxy:
         proxy['expense']['category'] = category
 
-        account = (await get_user_accounts(user.id))[0]  # FIXME select account step
+        # account = (await get_user_accounts(user.id))[0]  # FIXME select account step
 
-        expense = await create_expense_transaction(
-            user_id=user.id,
-            account_id=account.id,
-            **proxy.pop('expense'),
-        )
+        expense = await create_expense_transaction(user_id=user.id, **proxy.pop('expense'))
 
     await views.add_expense.expense_created(message.chat.id, expense)
     await state.finish()
