@@ -19,8 +19,8 @@ class Settings(BaseSettings):
 
     WEBHOOK_HOST: Optional[HttpUrl] = Field(env='WEBHOOK_HOST')
     WEBHOOK_PATH: str = '/tg'
-    WEBAPP_HOST: str = '127.0.0.1'
-    WEBAPP_PORT: int = 5000
+    HOST: str = '127.0.0.1'
+    PORT: int = 5000
 
     DATABASE_URL: SQLAlchemyPostgresDsn
     REDIS_URL: RedisDsn

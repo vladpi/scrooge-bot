@@ -31,8 +31,8 @@ if __name__ == '__main__':
             settings.WEBHOOK_PATH,
             on_startup=on_startup,
             on_shutdown=on_shutdown,
-            host=settings.WEBAPP_HOST,
-            port=settings.WEBAPP_PORT,
+            host=settings.HOST,
+            port=settings.PORT,
         )
 
     else:
