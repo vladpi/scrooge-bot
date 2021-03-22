@@ -5,7 +5,12 @@ from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn, RedisDsn
 
 class Settings(BaseSettings):
     BOT_TOKEN: str = Field(env='BOT_TOKEN')
+
     WEBHOOK_HOST: Optional[HttpUrl] = Field(env='WEBHOOK_HOST')
+    WEBHOOK_PATH: str = '/tg'
+    WEBAPP_HOST: str = '127.0.0.1'
+    WEBAPP_PORT: int = 5000
+
     DATABASE_URL: PostgresDsn
     REDIS_URL: RedisDsn
 
