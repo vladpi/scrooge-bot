@@ -13,7 +13,6 @@ async def main_menu(to_chat_id: int, text: Optional[str] = None):
     keyboard = [
         [KeyboardButton(buttons.ADD_EXPENSE)],
         [KeyboardButton(buttons.HISTORY)],
-        [KeyboardButton(buttons.SETTINGS)],
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
