@@ -16,7 +16,7 @@ class AccountService(BaseDBService):
             insert(accounts)
             .values(instance.dict())
             .on_conflict_do_update(
-                index_elements=[accounts.c.id], 
+                index_elements=[accounts.c.id],
                 set_=instance.dict(exclude={'id'}),
             )
             .returning(accounts)
