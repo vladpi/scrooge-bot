@@ -1,6 +1,14 @@
-from typing import Optional
+from typing import Optional, Dict
 
 from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn, RedisDsn
+
+
+class SQLAlchemyPostgresDsn(PostgresDsn):
+    @classmethod
+    def validate_parts(cls, parts: Dict[str, str]) -> Dict[str, str]:
+        if parts['scheme'] == 'postgres':
+            parts['scheme'] = 'postgresql'
+        return super().validate_parts(parts)
 
 
 class Settings(BaseSettings):
@@ -11,7 +19,7 @@ class Settings(BaseSettings):
     WEBAPP_HOST: str = '127.0.0.1'
     WEBAPP_PORT: int = 5000
 
-    DATABASE_URL: PostgresDsn
+    DATABASE_URL: SQLAlchemyPostgresDsn
     REDIS_URL: RedisDsn
 
     class Config:

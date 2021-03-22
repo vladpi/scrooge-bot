@@ -25,7 +25,6 @@ async def on_shutdown(dp: Dispatcher):
 
 
 if __name__ == '__main__':
-    print(settings.WEBHOOK_HOST)
     if settings.WEBHOOK_HOST:
         executor.start_webhook(
             dispatcher,
