@@ -4,14 +4,14 @@ from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn, RedisDsn
 
 
 class SQLAlchemyPostgresDsn(PostgresDsn):
-    def __init__(self, url, *args, **kwargs) -> None:
-        if url.startswith('postgres://'):
+    def __new__(cls, url: Optional[str], **kwargs) -> 'SQLAlchemyPostgresDsn':
+        if url and url.startswith('postgres://'):
             url = url.replace('postgres://', 'postgresql://')
 
         if kwargs.get('scheme') == 'postgres':
             kwargs['scheme'] = 'postgresql'
 
-        super().__init__(url, *args, **kwargs)
+        return super().__new__(cls, url, **kwargs)
 
 
 class Settings(BaseSettings):
