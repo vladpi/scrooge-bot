@@ -24,6 +24,22 @@ async def add_expense_entry(message: types.Message, state: FSMContext, user: 'Us
     async with state.proxy() as proxy:
         proxy.setdefault('expense', {})
 
+    await views.add_expense.add_expense_amount(message.chat.id)
+    await AddExpense.amount_and_comment.set()
+
+
+@dispatcher.message_handler(state=AddExpense.amount_and_comment)
+async def add_expense_amount_and_comment(message: types.Message, state: FSMContext, user: 'UserSchema'):
+    amount, comment = parsing.parse_amount_and_comment(message.text)
+
+    if amount is None:
+        await views.add_expense.wrong_expense_amount(message.chat.id)
+        return
+
+    async with state.proxy() as proxy:
+        proxy['expense']['amount'] = amount
+        proxy['expense']['comment'] = comment
+
     accounts = await get_user_accounts(user.id)
     if len(accounts) > 1:
         await views.add_expense.select_account(message.chat.id, accounts)
@@ -33,8 +49,8 @@ async def add_expense_entry(message: types.Message, state: FSMContext, user: 'Us
         async with state.proxy() as proxy:
             proxy['expense']['account_id'] = accounts[0].id
 
-        await views.add_expense.add_expense_amount(message.chat.id)
-        await AddExpense.amount_and_comment.set()
+        await views.add_expense.add_expense_date(message.chat.id)
+        await AddExpense.date.set()
 
 
 @dispatcher.message_handler(state=AddExpense.account)
@@ -46,22 +62,6 @@ async def add_expense_account(message: types.Message, state: FSMContext, user: '
 
     async with state.proxy() as proxy:
         proxy['expense']['account_id'] = account.id
-
-    await views.add_expense.add_expense_amount(message.chat.id)
-    await AddExpense.amount_and_comment.set()
-
-
-@dispatcher.message_handler(state=AddExpense.amount_and_comment)
-async def add_expense_amount_and_comment(message: types.Message, state: FSMContext):
-    amount, comment = parsing.parse_amount_and_comment(message.text)
-
-    if amount is None:
-        await views.add_expense.wrong_expense_amount(message.chat.id)
-        return
-
-    async with state.proxy() as proxy:
-        proxy['expense']['amount'] = amount
-        proxy['expense']['comment'] = comment
 
     await views.add_expense.add_expense_date(message.chat.id)
     await AddExpense.date.set()
