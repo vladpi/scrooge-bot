@@ -14,4 +14,4 @@ CATEGORIES = [
     'Кредиты',
 ]
 
-history_cb = CallbackData('history', 'page')
+history_cb = CallbackData('history', 'date')

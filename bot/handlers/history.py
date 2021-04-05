@@ -1,6 +1,6 @@
 import logging
-from math import ceil
-from typing import TYPE_CHECKING, Dict
+from datetime import date, datetime
+from typing import TYPE_CHECKING, Dict, Optional
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext, filters
@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext, filters
 from bot import dispatcher, views
 from bot.const import history_cb
 from bot.resources import buttons
-from modules.transactions import count_transactions_by_user, get_transactions_by_user
+from modules.transactions import get_transactions_history
 
 if TYPE_CHECKING:
     from modules.users import UserSchema
@@ -16,20 +16,17 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-TRANSACTION_PER_PAGE = 50
-
 
 @dispatcher.message_handler(filters.Text(equals=buttons.HISTORY))
 async def history_entry(message: types.Message, state: FSMContext, user: 'UserSchema'):
-    total = await count_transactions_by_user(user.id)
-    expenses = await get_transactions_by_user(user.id, limit=TRANSACTION_PER_PAGE)
+    prev_date, current_date, next_date, expenses = await get_transactions_history(user.id)
 
-    if not expenses:
+    if not expenses or current_date is None:
         # FIXME сообщение о пустых расходах
         return
 
     await views.history.history(
-        user.id, expenses, total_pages=int(ceil(total / float(TRANSACTION_PER_PAGE))) - 1,
+        user.id, current_date, expenses, next_date=next_date, prev_date=prev_date,
     )
 
 
@@ -37,21 +34,24 @@ async def history_entry(message: types.Message, state: FSMContext, user: 'UserSc
 async def history_page(
     query: types.CallbackQuery, callback_data: Dict[str, str], user: 'UserSchema',
 ):
-    page = int(callback_data.get('page', 0))
+    try:
+        on_date: Optional[date] = datetime.strptime(callback_data.get('date'), '%d.%m.%Y').date()
+    except ValueError:
+        on_date = None
 
-    total = await count_transactions_by_user(user.id)
-    expenses = await get_transactions_by_user(
-        user.id, limit=TRANSACTION_PER_PAGE, offset=page * TRANSACTION_PER_PAGE,
+    prev_date, current_date, next_date, expenses = await get_transactions_history(
+        user.id, on_date=on_date
     )
 
-    if not expenses:
+    if not expenses or current_date is None:
         return
 
     await views.history.history(
         user.id,
+        current_date,
         expenses,
-        current_page=page,
-        total_pages=int(ceil(total / float(TRANSACTION_PER_PAGE))) - 1,
+        next_date=next_date,
+        prev_date=prev_date,
         message_for_update=query.message,
     )
     await query.answer()

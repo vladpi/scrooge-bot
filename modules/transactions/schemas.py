@@ -24,7 +24,6 @@ class TransactionSchema(BaseModel):
             for part in [
                 messages.EXPENSE_AMOUNT.format(amount=self.amount),
                 messages.EXPENSE_COMMENT.format(comment=self.comment) if self.comment else None,
-                messages.EXPENSE_DATE.format(date=self.on_date),
                 messages.EXPENSE_CATEGORY.format(category=self.category),
             ]
             if part is not None
