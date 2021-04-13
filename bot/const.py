@@ -15,3 +15,4 @@ CATEGORIES = [
 ]
 
 history_cb = CallbackData('history', 'date')
+reports_cb = CallbackData('reports', 'period')
