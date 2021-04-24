@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from const import TransactionType
+from .consts import TransactionType
 
 
 class TransactionSchema(BaseModel):

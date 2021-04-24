@@ -2,8 +2,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import List, Optional, Tuple, Union
 
-from const import TransactionType
-
+from .consts import TransactionType
 from .schemas import TransactionSchema
 from .service import transaction_service
 
@@ -43,9 +42,7 @@ async def get_transactions_by_user(
 async def get_transactions_history(
     user_id: int, on_date: Optional[date] = None,
 ) -> Tuple[Optional[date], Optional[date], Optional[date], List[TransactionSchema]]:
-    prev_date, on_date, next_date = await transaction_service.get_dates_for_user(
-        user_id, on_date
-    )
+    prev_date, on_date, next_date = await transaction_service.get_dates_for_user(user_id, on_date)
 
     if on_date is None:
         return None, None, None, []

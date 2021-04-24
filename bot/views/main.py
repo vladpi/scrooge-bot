@@ -2,7 +2,7 @@ from typing import Optional
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-from bot import bot
+from app import bot
 from bot.resources import buttons, messages
 
 

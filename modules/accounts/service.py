@@ -5,9 +5,9 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 
 from libs.base_service import BaseDBService
-from modules.db.tables import accounts, accounts_users
 
 from .schemas import AccountSchema
+from .tables import accounts, accounts_users
 
 
 class AccountService(BaseDBService):

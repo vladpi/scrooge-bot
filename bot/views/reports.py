@@ -2,11 +2,9 @@ from typing import Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from bot import bot
+from app import bot
 from bot.const import reports_cb
 from modules.reports import ReportPeriod, ReportSchema
-
-
 
 
 async def report(

@@ -1,6 +1,6 @@
 import sqlalchemy as sa
 
-from ..metadata import metadata
+from app.db import metadata
 
 accounts = sa.Table(
     'accounts',

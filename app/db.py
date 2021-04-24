@@ -1,4 +1,7 @@
 import sqlalchemy as sa
+from databases import Database
+
+from .settings import settings
 
 # Default naming convention for all indexes and constraints
 # See why this is important and how it would save your time:
@@ -15,3 +18,4 @@ convention = {
 }
 
 metadata = sa.MetaData(naming_convention=convention)
+database = Database(settings.DATABASE_URL)

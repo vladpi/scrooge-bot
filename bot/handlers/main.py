@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING
 from aiogram import types
 from aiogram.dispatcher import FSMContext, filters
 
-from bot import dispatcher, views
+from app import dispatcher
+from bot import views
 from modules.transactions import count_transactions_by_user
 
 if TYPE_CHECKING:

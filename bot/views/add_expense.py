@@ -2,7 +2,7 @@ from typing import List
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
-from bot import bot
+from app import bot
 from bot.const import CATEGORIES
 from bot.resources import buttons, messages
 from modules.accounts import AccountSchema

@@ -3,10 +3,8 @@ import logging
 from aiogram import executor
 from aiogram.dispatcher import Dispatcher
 
-from bot import bot, dispatcher
+from app import bot, database, dispatcher, settings
 from bot.middlewares import UserMiddleware
-from config import settings
-from modules.db import database
 
 logging.basicConfig(level=logging.INFO)
 

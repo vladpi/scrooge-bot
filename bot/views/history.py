@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from bot import bot
+from app import bot
 from bot.const import history_cb
 from modules.transactions import TransactionSchema
 

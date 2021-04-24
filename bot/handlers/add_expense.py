@@ -5,7 +5,8 @@ from typing import TYPE_CHECKING, Optional
 from aiogram import types
 from aiogram.dispatcher import FSMContext, filters
 
-from bot import dispatcher, views
+from app import dispatcher
+from bot import views
 from bot.resources import buttons
 from bot.states import AddExpense
 from bot.utils import parsing
@@ -29,7 +30,9 @@ async def add_expense_entry(message: types.Message, state: FSMContext, user: 'Us
 
 
 @dispatcher.message_handler(state=AddExpense.amount_and_comment)
-async def add_expense_amount_and_comment(message: types.Message, state: FSMContext, user: 'UserSchema'):
+async def add_expense_amount_and_comment(
+    message: types.Message, state: FSMContext, user: 'UserSchema'
+):
     amount, comment = parsing.parse_amount_and_comment(message.text)
 
     if amount is None:

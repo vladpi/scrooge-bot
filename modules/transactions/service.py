@@ -6,11 +6,11 @@ from typing import List, Optional, Tuple
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert
 
-from const import TransactionType
 from libs.base_service import BaseDBService
-from modules.db.tables import transactions
 
+from .consts import TransactionType
 from .schemas import TransactionSchema
+from .tables import transactions
 
 
 class TransactionService(BaseDBService):

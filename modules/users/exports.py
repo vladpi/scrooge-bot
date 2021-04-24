@@ -1,7 +1,7 @@
 from typing import Optional
 
-from const import DEFAULT_ACCOUNT_NAME
 from modules.accounts import create_account
+from modules.accounts.consts import DEFAULT_ACCOUNT_NAME
 
 from .schemas import UserSchema
 from .service import user_service

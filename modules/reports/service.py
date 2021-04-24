@@ -1,13 +1,10 @@
-from asyncio import gather
 from datetime import date
-from decimal import Decimal
-from typing import List, Optional, Tuple
+from typing import List
 
 from sqlalchemy import and_, func, literal_column, select
 
-from const import TransactionType
 from libs.base_service import BaseDBService
-from modules.db.tables import transactions
+from modules.transactions.tables import transactions
 
 from .schemas import CategoryTotalSchema
 
@@ -18,7 +15,7 @@ class ReportService(BaseDBService):
     ) -> List[CategoryTotalSchema]:
         query = (
             select([
-                transactions.c.category, 
+                transactions.c.category,
                 func.sum(transactions.c.amount).label('total'),
             ])
             .where(

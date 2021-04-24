@@ -1,8 +1,8 @@
 import sqlalchemy as sa
 
-from const import TransactionType
+from app.db import metadata
 
-from ..metadata import metadata
+from .consts import TransactionType
 
 transactions = sa.Table(
     'transactions',

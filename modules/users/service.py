@@ -5,9 +5,9 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert
 
 from libs.base_service import BaseDBService
-from modules.db.tables import users
 
 from .schemas import UserSchema
+from .tables import users
 
 
 class UserService(BaseDBService):
