@@ -5,13 +5,14 @@ from typing import TYPE_CHECKING, Optional
 from aiogram import types
 from aiogram.dispatcher import FSMContext, filters
 
-from app import dispatcher
-from bot import views
-from bot.resources import buttons
-from bot.states import AddExpense
-from bot.utils import parsing
 from modules.accounts import get_user_account_by_name, get_user_accounts
 from modules.transactions import create_expense_transaction
+
+from .. import views
+from ..bot import dispatcher
+from ..resources import buttons
+from ..states import AddExpense
+from ..utils import parsing
 
 if TYPE_CHECKING:
     from modules.users import UserSchema

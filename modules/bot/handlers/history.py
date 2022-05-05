@@ -5,11 +5,12 @@ from typing import TYPE_CHECKING, Dict, Optional
 from aiogram import types
 from aiogram.dispatcher import FSMContext, filters
 
-from app import dispatcher
-from bot import views
-from bot.const import history_cb
-from bot.resources import buttons
 from modules.transactions import get_transactions_history
+
+from .. import views
+from ..bot import dispatcher
+from ..const import history_cb
+from ..resources import buttons
 
 if TYPE_CHECKING:
     from modules.users import UserSchema

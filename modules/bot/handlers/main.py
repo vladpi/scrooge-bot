@@ -3,9 +3,10 @@ from typing import TYPE_CHECKING
 from aiogram import types
 from aiogram.dispatcher import FSMContext, filters
 
-from app import dispatcher
-from bot import views
 from modules.transactions import count_transactions_by_user
+
+from .. import views
+from ..bot import dispatcher
 
 if TYPE_CHECKING:
     from modules.users import UserSchema

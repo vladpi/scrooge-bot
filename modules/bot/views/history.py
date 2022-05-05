@@ -3,9 +3,10 @@ from typing import List, Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from app import bot
-from bot.const import history_cb
 from modules.transactions import TransactionSchema
+
+from ..bot import bot
+from ..const import history_cb
 
 
 async def history(

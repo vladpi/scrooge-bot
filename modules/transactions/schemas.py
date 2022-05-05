@@ -17,7 +17,7 @@ class TransactionSchema(BaseModel):
     category: str
 
     def __str__(self):
-        from bot.resources import messages  # FIXME
+        from modules.bot.resources import messages  # FIXME
 
         parts = [
             part

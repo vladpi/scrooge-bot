@@ -2,12 +2,12 @@ from typing import List
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
-from app import bot
-from bot.const import CATEGORIES
-from bot.resources import buttons, messages
 from modules.accounts import AccountSchema
 from modules.transactions import TransactionSchema
 
+from ..bot import bot
+from ..const import CATEGORIES
+from ..resources import buttons, messages
 from .main import main_menu
 
 
