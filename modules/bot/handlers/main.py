@@ -9,11 +9,11 @@ from .. import views
 from ..bot import dispatcher
 
 if TYPE_CHECKING:
-    from modules.users import UserSchema
+    from modules.users import User
 
 
 @dispatcher.message_handler(filters.CommandStart(), state='*')
-async def start(message: types.Message, state: FSMContext, user: 'UserSchema'):
+async def start(message: types.Message, state: FSMContext, user: 'User'):
     has_transactions = await count_transactions_by_user(user.id) > 0
     await state.reset_state()
     await views.main.main_menu(message.chat.id, has_transactions=has_transactions)

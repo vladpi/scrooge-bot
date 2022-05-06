@@ -3,8 +3,8 @@ from typing import Optional
 from modules.accounts import create_account
 from modules.accounts.consts import DEFAULT_ACCOUNT_NAME
 
-from .schemas import UserSchema
-from .service import user_service
+from .models import User
+from .repository import users_repo
 
 
 async def create_or_update_user(
@@ -12,11 +12,11 @@ async def create_or_update_user(
     username: Optional[str] = None,
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
-) -> UserSchema:
-    user = await user_service.get(id_)
+) -> User:
+    user = await users_repo.get(id_)
 
     if user is None:
-        user = await user_service.create(
+        user = await users_repo.create(
             id_=id_,
             username=username,
             first_name=first_name,
@@ -26,13 +26,15 @@ async def create_or_update_user(
         await create_account(user.id, DEFAULT_ACCOUNT_NAME)
 
     else:
-        user.username = username
-        user.first_name = first_name
-        user.last_name = last_name
-        user = await user_service.put(user)
+        user.populate(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        user = await users_repo.save(user)
 
     return user
 
 
-async def get_user(id_: int) -> Optional[UserSchema]:
-    return await user_service.get(id_)
+async def get_user(id_: int) -> Optional[User]:
+    return await users_repo.get(id_)

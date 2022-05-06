@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from modules.transactions import TransactionSchema
+from modules.transactions import Transaction
 
 from ..bot import bot
 from ..const import history_cb
@@ -12,7 +12,7 @@ from ..const import history_cb
 async def history(
     to_chat_id: int,
     current_date: date,
-    expenses: List[TransactionSchema],
+    expenses: List[Transaction],
     next_date: Optional[date] = None,
     prev_date: Optional[date] = None,
     message_for_update: Optional[Message] = None,
@@ -38,10 +38,13 @@ async def history(
 
     if message_for_update is not None:
         await message_for_update.edit_text(
-            text=message, reply_markup=reply_markup,
+            text=message,
+            reply_markup=reply_markup,
         )
 
     else:
         await bot.send_message(
-            chat_id=to_chat_id, text=message, reply_markup=reply_markup,
+            chat_id=to_chat_id,
+            text=message,
+            reply_markup=reply_markup,
         )

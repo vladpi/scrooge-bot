@@ -2,7 +2,7 @@ from typing import Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from modules.reports import ReportPeriod, ReportSchema
+from modules.reports import ReportPeriod, Report
 
 from ..bot import bot
 from ..const import reports_cb
@@ -10,13 +10,15 @@ from ..const import reports_cb
 
 async def report(
     to_chat_id: int,
-    report: ReportSchema,
+    report: Report,
     message_for_update: Optional[Message] = None,
 ):
     if report.period == ReportPeriod.DAY:
         message = f'<b>{report.period_start:%d.%m.%Y}</b>\n\n'
     else:
-        message = f'<b>{report.period_start:%d.%m.%Y} - {report.period_end:%d.%m.%Y}</b>\n\n'
+        message = (
+            f'<b>{report.period_start:%d.%m.%Y} - {report.period_end:%d.%m.%Y}</b>\n\n'
+        )
 
     for category_total in report.categories_totals:
         message += f'<b>{category_total.category}:</b> {category_total.total}\n'
@@ -52,4 +54,6 @@ async def report(
         await message_for_update.edit_text(text=message, reply_markup=reply_markup)
 
     else:
-        await bot.send_message(chat_id=to_chat_id, text=message, reply_markup=reply_markup)
+        await bot.send_message(
+            chat_id=to_chat_id, text=message, reply_markup=reply_markup
+        )

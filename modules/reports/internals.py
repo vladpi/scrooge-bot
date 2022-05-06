@@ -2,8 +2,8 @@ from datetime import date, timedelta
 from typing import Optional
 
 from .consts import ReportPeriod
-from .schemas import ReportSchema
-from .service import report_service
+from .models import Report
+from .repository import reports_repo
 
 
 # FIXME for pagination
@@ -33,9 +33,11 @@ async def get_report(
     else:
         raise ValueError('Cannot get report without dates')  # FIXME for custom error
 
-    categories_totals = await report_service.get_categories_totals(user_id, start_date, end_date)
+    categories_totals = await reports_repo.get_categories_totals(
+        user_id, start_date, end_date
+    )
 
-    return ReportSchema(
+    return Report(
         period=period,
         period_start=start_date,
         period_end=end_date,

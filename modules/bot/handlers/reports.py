@@ -13,14 +13,14 @@ from ..const import reports_cb
 from ..resources import buttons
 
 if TYPE_CHECKING:
-    from modules.users import UserSchema
+    from modules.users import User
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
 @dispatcher.message_handler(filters.Text(equals=buttons.REPORTS))
-async def reports_entry(message: types.Message, state: FSMContext, user: 'UserSchema'):
+async def reports_entry(message: types.Message, state: FSMContext, user: 'User'):
     report = await get_report(
         user.id,
         end_date=datetime.utcnow().date(),  # FIXME for localized date
@@ -31,7 +31,9 @@ async def reports_entry(message: types.Message, state: FSMContext, user: 'UserSc
 
 @dispatcher.callback_query_handler(reports_cb.filter())
 async def report_for_period(
-    query: types.CallbackQuery, callback_data: Dict[str, str], user: 'UserSchema',
+    query: types.CallbackQuery,
+    callback_data: Dict[str, str],
+    user: 'User',
 ):
     try:
         period = ReportPeriod(callback_data.get('period'))
@@ -39,6 +41,8 @@ async def report_for_period(
         pass  # FIXME fallback message
 
     report = await get_report(
-        user.id, end_date=datetime.utcnow().date(), period=period,  # FIXME for localized date
+        user.id,
+        end_date=datetime.utcnow().date(),
+        period=period,  # FIXME for localized date
     )
     await views.reports.report(user.id, report, message_for_update=query.message)

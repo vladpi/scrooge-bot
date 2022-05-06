@@ -2,8 +2,8 @@ from typing import List
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
-from modules.accounts import AccountSchema
-from modules.transactions import TransactionSchema
+from modules.accounts import Account
+from modules.transactions import Transaction
 
 from ..bot import bot
 from ..const import CATEGORIES
@@ -11,7 +11,7 @@ from ..resources import buttons, messages
 from .main import main_menu
 
 
-async def select_account(to_chat_id: int, accounts: List[AccountSchema]):
+async def select_account(to_chat_id: int, accounts: List[Account]):
     keyboard = [[KeyboardButton(account.name)] for account in accounts]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await bot.send_message(
@@ -69,6 +69,6 @@ async def select_category(to_chat_id: int):
     )
 
 
-async def expense_created(to_chat_id: int, expense: TransactionSchema):
+async def expense_created(to_chat_id: int, expense: Transaction):
     text = messages.EXPENSE_CREATED.format(expense_card=str(expense))
     await main_menu(to_chat_id, text=text)

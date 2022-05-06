@@ -16,7 +16,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(log_color)s%(asctime)s [%(levelname)s] [%(name)s] %(message)s (%(filename)s:%(lineno)d)',
+            'format': '%(log_color)s%(asctime)s [%(levelname)s] [%(name)s] %(message)s (%(filename)s:%(lineno)d)',  # noqa
             '()': 'colorlog.ColoredFormatter',
             'log_colors': {
                 'DEBUG': 'cyan',

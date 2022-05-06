@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from libs.base_model import BaseModel
 
 
-class UserSchema(BaseModel):
+class User(BaseModel):
     id: int
     username: Optional[str]
     first_name: Optional[str]

@@ -2,18 +2,18 @@ from datetime import date
 from decimal import Decimal
 from typing import List
 
-from pydantic import BaseModel
+from libs.base_model import BaseModel
 
 from .consts import ReportPeriod
 
 
-class CategoryTotalSchema(BaseModel):
+class CategoryTotal(BaseModel):
     category: str
     total: Decimal
 
 
-class ReportSchema(BaseModel):
+class Report(BaseModel):
     period: ReportPeriod
     period_start: date
     period_end: date
-    categories_totals: List[CategoryTotalSchema]
+    categories_totals: List[CategoryTotal]

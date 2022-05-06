@@ -15,14 +15,14 @@ from ..states import AddExpense
 from ..utils import parsing
 
 if TYPE_CHECKING:
-    from modules.users import UserSchema
+    from modules.users import User
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
 @dispatcher.message_handler(filters.Text(equals=buttons.ADD_EXPENSE))
-async def add_expense_entry(message: types.Message, state: FSMContext, user: 'UserSchema'):
+async def add_expense_entry(message: types.Message, state: FSMContext, user: 'User'):
     async with state.proxy() as proxy:
         proxy.setdefault('expense', {})
 
@@ -32,7 +32,7 @@ async def add_expense_entry(message: types.Message, state: FSMContext, user: 'Us
 
 @dispatcher.message_handler(state=AddExpense.amount_and_comment)
 async def add_expense_amount_and_comment(
-    message: types.Message, state: FSMContext, user: 'UserSchema'
+    message: types.Message, state: FSMContext, user: 'User'
 ):
     amount, comment = parsing.parse_amount_and_comment(message.text)
 
@@ -58,7 +58,7 @@ async def add_expense_amount_and_comment(
 
 
 @dispatcher.message_handler(state=AddExpense.account)
-async def add_expense_account(message: types.Message, state: FSMContext, user: 'UserSchema'):
+async def add_expense_account(message: types.Message, state: FSMContext, user: 'User'):
     account = await get_user_account_by_name(user.id, message.text)
 
     if account is None:
@@ -79,7 +79,9 @@ async def add_expense_date(message: types.Message, state: FSMContext):
         parsed_date = datetime.utcnow().date()  # FIXME localize date
 
     elif message.text == buttons.YESTERDAY:
-        parsed_date = (datetime.utcnow() - timedelta(days=1)).date()  # FIXME localize date
+        parsed_date = (
+            datetime.utcnow() - timedelta(days=1)
+        ).date()  # FIXME localize date
 
     else:
         parsed_date = parsing.parse_date(message.text)
@@ -96,13 +98,15 @@ async def add_expense_date(message: types.Message, state: FSMContext):
 
 
 @dispatcher.message_handler(state=AddExpense.category)
-async def add_expense_category(message: types.Message, state: FSMContext, user: 'UserSchema'):
+async def add_expense_category(message: types.Message, state: FSMContext, user: 'User'):
     category = message.text
 
     async with state.proxy() as proxy:
         proxy['expense']['category'] = category
 
-        expense = await create_expense_transaction(user_id=user.id, **proxy.pop('expense'))
+        expense = await create_expense_transaction(
+            user_id=user.id, **proxy.pop('expense')
+        )
 
     await views.add_expense.expense_created(message.chat.id, expense)
     await state.finish()

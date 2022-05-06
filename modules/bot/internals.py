@@ -1,6 +1,7 @@
 from app import settings
 
 from .bot import bot
+
 # from .consts import COMMANDS
 
 
