@@ -2,7 +2,7 @@ from typing import Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from modules.reports import ReportPeriod, Report
+from modules.reports import Report, ReportPeriod
 
 from ...bot import bot
 from .consts import reports_cb
