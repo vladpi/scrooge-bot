@@ -2,13 +2,15 @@ from typing import TYPE_CHECKING, Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from modules.reports import ReportPeriod
+
 from .consts import reports_cb
 
 if TYPE_CHECKING:
     from aiogram import Bot
     from aiogram.types import Message
 
-    from modules.reports import Report, ReportPeriod
+    from modules.reports import Report
 
 
 async def report(

@@ -17,7 +17,7 @@ async def create_or_update_user(
 
     if user is None:
         user = await users_repo.create(
-            id_=id_,
+            id=id_,
             username=username,
             first_name=first_name,
             last_name=last_name,
