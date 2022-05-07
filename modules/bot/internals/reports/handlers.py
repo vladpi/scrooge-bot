@@ -26,7 +26,7 @@ async def reports_entry(message: types.Message, state: FSMContext, user: 'User')
         end_date=datetime.utcnow().date(),  # FIXME for localized date
         period=ReportPeriod.DAY,
     )
-    await views.report(user.id, report)
+    await views.report(message.bot, user.id, report)
 
 
 @dispatcher.callback_query_handler(reports_cb.filter())
@@ -45,4 +45,4 @@ async def report_for_period(
         end_date=datetime.utcnow().date(),
         period=period,  # FIXME for localized date
     )
-    await views.report(user.id, report, message_for_update=query.message)
+    await views.report(query.bot, user.id, report, message_for_update=query.message)

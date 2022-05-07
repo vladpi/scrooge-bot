@@ -1,17 +1,21 @@
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from modules.reports import Report, ReportPeriod
-
-from ...bot import bot
 from .consts import reports_cb
+
+if TYPE_CHECKING:
+    from aiogram import Bot
+    from aiogram.types import Message
+
+    from modules.reports import Report, ReportPeriod
 
 
 async def report(
+    bot: 'Bot',
     to_chat_id: int,
-    report: Report,
-    message_for_update: Optional[Message] = None,
+    report: 'Report',
+    message_for_update: Optional['Message'] = None,
 ):
     if report.period == ReportPeriod.DAY:
         message = f'<b>{report.period_start:%d.%m.%Y}</b>\n\n'
