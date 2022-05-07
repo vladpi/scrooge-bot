@@ -5,23 +5,29 @@ description = "Telegram bot for expense tracking"
 authors = ["Vlad Pastushenko <vladp@ro.ru>"]
 
 [tool.poetry.dependencies]
-python = "3.8.7"
-aiogram = "^2.9.2"
-pydantic = "^1.6.1"
-python-dotenv = "^0.14.0"
+python = "3.10.1"
+fastapi = "^0.75.2"
+uvicorn = "^0.17.6"
+python-dotenv = "^0.20.0"
+colorlog = "^6.6.0"
+aiogram = "^2.20"
+fastapi-security-telegram-webhook = "^0.2.0"
+alembic = "^1.7.7"
+psycopg2 = "^2.9.3"
+aioredis = "^2.0.1"
+gunicorn = "^20.1.0"
+databases = {extras = ["postgresql"], version = "^0.5.5"}
 dateparser = "^0.7.6"
-databases = {version = "^0.4.1", extras = ["postgresql"]}
-alembic = "^1.5.5"
-psycopg2 = "^2.8.6"
-aioredis = "^1.3.1"
+flake8-quotes = "^3.3.1"
 
 [tool.poetry.dev-dependencies]
-black = "^19.10b0"
-isort = "^5.4.2"
-mypy = "^0.782"
-rope = "^0.18.0"
-flake8 = "^3.9.0"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+black = "^22.3.0"
+pre-commit = "^2.18.1"
+mypy = "^0.950"
+types-dateparser = "^1.1.2"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

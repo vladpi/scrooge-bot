@@ -1,39 +1,26 @@
-import logging
+import uvicorn
+from fastapi import FastAPI
 
-from aiogram import executor
-from aiogram.dispatcher import Dispatcher
+from app import database
+from app.logging import LOGGING
+from modules import routers
+from modules.bot import setup_bot
 
-from app import bot, database, dispatcher, settings
-from bot.middlewares import UserMiddleware
+app = FastAPI(title='Scrooge Bot')
+for router in routers:
+    app.include_router(router)
 
-logging.basicConfig(level=logging.INFO)
 
-
-async def on_startup(dp: Dispatcher):
-    if settings.WEBHOOK_HOST:
-        await bot.set_webhook(f'{settings.WEBHOOK_HOST}{settings.WEBHOOK_PATH}')
-
-    dp.middleware.setup(UserMiddleware())
+@app.on_event('startup')
+async def startup():
     await database.connect()
+    await setup_bot()
 
 
-async def on_shutdown(dp: Dispatcher):
-    await dp.storage.close()
-    await dp.storage.wait_closed()
+@app.on_event('shutdown')
+async def shutdown():
+    await database.disconnect()
 
 
 if __name__ == '__main__':
-    if settings.WEBHOOK_HOST:
-        executor.start_webhook(
-            dispatcher,
-            settings.WEBHOOK_PATH,
-            on_startup=on_startup,
-            on_shutdown=on_shutdown,
-            host=settings.HOST,
-            port=settings.PORT,
-        )
-
-    else:
-        executor.start_polling(
-            dispatcher, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True,
-        )
+    uvicorn.run(app, host='0.0.0.0', port=8000, log_config=LOGGING)

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn, RedisDsn
+from pydantic import BaseSettings, Field, HttpUrl, PostgresDsn, RedisDsn, SecretStr
 
 
 class SQLAlchemyPostgresDsn(PostgresDsn):
@@ -15,15 +15,14 @@ class SQLAlchemyPostgresDsn(PostgresDsn):
 
 
 class Settings(BaseSettings):
-    BOT_TOKEN: str = Field(env='BOT_TOKEN')
+    TG_BOT_TOKEN: SecretStr
 
-    WEBHOOK_HOST: Optional[HttpUrl] = Field(env='WEBHOOK_HOST')
-    WEBHOOK_PATH: str = '/tg'
-    HOST: str = '127.0.0.1'
-    PORT: int = 5000
+    WEBHOOK_HOST: Optional[HttpUrl]
 
     DATABASE_URL: SQLAlchemyPostgresDsn
     REDIS_URL: RedisDsn
+
+    LOG_LEVEL: str = Field(default='INFO')
 
     class Config:
         env_file = '.env'
