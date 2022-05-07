@@ -7,10 +7,10 @@ from aiogram.dispatcher import FSMContext, filters
 
 from modules.reports import ReportPeriod, get_report
 
-from .. import views
-from ..bot import dispatcher
-from ..const import reports_cb
-from ..resources import buttons
+from ...bot import dispatcher
+from .. import buttons
+from . import views
+from .consts import reports_cb
 
 if TYPE_CHECKING:
     from modules.users import User
@@ -26,7 +26,7 @@ async def reports_entry(message: types.Message, state: FSMContext, user: 'User')
         end_date=datetime.utcnow().date(),  # FIXME for localized date
         period=ReportPeriod.DAY,
     )
-    await views.reports.report(user.id, report)
+    await views.report(user.id, report)
 
 
 @dispatcher.callback_query_handler(reports_cb.filter())
@@ -45,4 +45,4 @@ async def report_for_period(
         end_date=datetime.utcnow().date(),
         period=period,  # FIXME for localized date
     )
-    await views.reports.report(user.id, report, message_for_update=query.message)
+    await views.report(user.id, report, message_for_update=query.message)

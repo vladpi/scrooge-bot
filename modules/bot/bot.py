@@ -21,5 +21,12 @@ storage = RedisStorage2(
 dispatcher: Dispatcher = Dispatcher(bot, storage=storage)
 dispatcher.setup_middleware(UserMiddleware())
 
-from .views import *  # noqa
-from .handlers import *  # noqa
+
+async def setup_bot() -> None:
+    url = f'{settings.WEBHOOK_HOST}/tg/webhook/{settings.TG_BOT_TOKEN.get_secret_value()}'
+    current_url = (await bot.get_webhook_info())['url']
+    if current_url != url:
+        await bot.set_webhook(url=url, drop_pending_updates=True)
+
+
+from .internals import *  # noqa

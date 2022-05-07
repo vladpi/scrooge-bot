@@ -17,16 +17,13 @@ class Transaction(BaseModel):
     category: str
 
     def __str__(self):
-        from modules.bot.resources import messages  # FIXME
-
+        # FIXME ???
         parts = [
             part
             for part in [
-                messages.EXPENSE_AMOUNT.format(amount=self.amount),
-                messages.EXPENSE_COMMENT.format(comment=self.comment)
-                if self.comment
-                else None,
-                messages.EXPENSE_CATEGORY.format(category=self.category),
+                f'<b>Сумма:</b> {self.amount}',
+                f'<b>Комментарий:</b> {self.comment}' if self.comment else None,
+                f'<b>Категория:</b> {self.category}',
             ]
             if part is not None
         ]

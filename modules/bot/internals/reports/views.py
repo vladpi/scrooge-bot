@@ -4,8 +4,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from modules.reports import ReportPeriod, Report
 
-from ..bot import bot
-from ..const import reports_cb
+from ...bot import bot
+from .consts import reports_cb
 
 
 async def report(

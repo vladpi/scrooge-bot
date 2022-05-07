@@ -1,18 +1,21 @@
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-from ..bot import bot
-from ..resources import buttons, messages
+from .. import buttons
+
+if TYPE_CHECKING:
+    from aiogram import Bot
 
 
 async def main_menu(
+    bot: 'Bot',
     to_chat_id: int,
     text: Optional[str] = None,
     has_transactions: bool = True,
 ):
     if text is None:
-        text = messages.MAIN_MENU
+        text = '<b>Ты в главном меню!</b>'
 
     keyboard = [
         [KeyboardButton(buttons.ADD_EXPENSE)],

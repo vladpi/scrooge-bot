@@ -5,8 +5,8 @@ from aiogram.dispatcher import FSMContext, filters
 
 from modules.transactions import count_transactions_by_user
 
-from .. import views
-from ..bot import dispatcher
+from ...bot import dispatcher
+from . import views
 
 if TYPE_CHECKING:
     from modules.users import User
@@ -16,4 +16,4 @@ if TYPE_CHECKING:
 async def start(message: types.Message, state: FSMContext, user: 'User'):
     has_transactions = await count_transactions_by_user(user.id) > 0
     await state.reset_state()
-    await views.main.main_menu(message.chat.id, has_transactions=has_transactions)
+    await views.main_menu(message.bot, message.chat.id, has_transactions=has_transactions)

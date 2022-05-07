@@ -7,10 +7,10 @@ from aiogram.dispatcher import FSMContext, filters
 
 from modules.transactions import get_transactions_history
 
-from .. import views
-from ..bot import dispatcher
-from ..const import history_cb
-from ..resources import buttons
+from ...bot import dispatcher
+from .. import buttons
+from . import views
+from .consts import history_cb
 
 if TYPE_CHECKING:
     from modules.users import User
@@ -21,15 +21,14 @@ logger.setLevel(logging.DEBUG)
 
 @dispatcher.message_handler(filters.Text(equals=buttons.HISTORY))
 async def history_entry(message: types.Message, state: FSMContext, user: 'User'):
-    prev_date, current_date, next_date, expenses = await get_transactions_history(
-        user.id
-    )
+    prev_date, current_date, next_date, expenses = await get_transactions_history(user.id)
 
     if not expenses or current_date is None:
         # FIXME сообщение о пустых расходах
         return
 
-    await views.history.history(
+    await views.history(
+        message.bot,
         user.id,
         current_date,
         expenses,
@@ -45,9 +44,7 @@ async def history_page(
     user: 'User',
 ):
     try:
-        on_date: Optional[date] = datetime.strptime(
-            callback_data['date'], '%d.%m.%Y'
-        ).date()
+        on_date: Optional[date] = datetime.strptime(callback_data['date'], '%d.%m.%Y').date()
     except (ValueError, KeyError):
         on_date = None
 
@@ -58,7 +55,8 @@ async def history_page(
     if not expenses or current_date is None:
         return
 
-    await views.history.history(
+    await views.history(
+        query.bot,
         user.id,
         current_date,
         expenses,

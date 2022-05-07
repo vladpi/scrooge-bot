@@ -1,18 +1,21 @@
 from datetime import date
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from modules.transactions import Transaction
+from .consts import history_cb
 
-from ..bot import bot
-from ..const import history_cb
+if TYPE_CHECKING:
+    from aiogram import Bot
+
+    from modules.transactions import Transaction
 
 
 async def history(
+    bot: 'Bot',
     to_chat_id: int,
     current_date: date,
-    expenses: List[Transaction],
+    expenses: List['Transaction'],
     next_date: Optional[date] = None,
     prev_date: Optional[date] = None,
     message_for_update: Optional[Message] = None,
