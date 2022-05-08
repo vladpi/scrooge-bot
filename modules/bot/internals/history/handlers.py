@@ -44,12 +44,12 @@ async def history_page(
     user: 'User',
 ):
     try:
-        on_date: Optional[date] = datetime.strptime(callback_data['date'], '%d.%m.%Y').date()
+        at_date: Optional[date] = datetime.strptime(callback_data['date'], '%d.%m.%Y').date()
     except (ValueError, KeyError):
-        on_date = None
+        at_date = None
 
     prev_date, current_date, next_date, expenses = await get_transactions_history(
-        user.id, on_date=on_date
+        user.id, at_date=at_date
     )
 
     if not expenses or current_date is None:

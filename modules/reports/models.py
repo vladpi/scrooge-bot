@@ -8,7 +8,7 @@ from .consts import ReportPeriod
 
 
 class CategoryTotal(BaseModel):
-    category: str
+    category_id: int  # FIXME ???
     total: Decimal
 
 

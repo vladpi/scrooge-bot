@@ -1,6 +1,6 @@
 from .internals import (
     count_transactions_by_user,
-    create_expense_transaction,
+    create_outcome_transaction,
     get_transactions_by_user,
     get_transactions_history,
 )
@@ -9,7 +9,7 @@ from .tables import transactions
 
 __all__ = [
     'count_transactions_by_user',
-    'create_expense_transaction',
+    'create_outcome_transaction',
     'get_transactions_by_user',
     'get_transactions_history',
     'Transaction',

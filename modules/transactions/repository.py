@@ -17,13 +17,13 @@ class TransactionRepository(BaseModelRepository[Transaction]):
         user_id: int,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
-        on_date: Optional[date] = None,
+        at_date: Optional[date] = None,
     ) -> List['Transaction']:
         query = (
             select([transactions])
             .where(transactions.c.user_id == user_id)
             .order_by(
-                transactions.c.on_date.desc(),
+                transactions.c.at_date.desc(),
                 transactions.c.created_at.desc(),
             )
         )
@@ -34,12 +34,10 @@ class TransactionRepository(BaseModelRepository[Transaction]):
         if limit is not None:
             query = query.limit(limit)
 
-        if on_date is not None:
-            query = query.where(transactions.c.on_date == on_date)
+        if at_date is not None:
+            query = query.where(transactions.c.at_date == at_date)
 
-        records = await self.db.fetch_all(query)
-
-        return [Transaction.parse_obj(record) for record in records]
+        return await self._fetch_all(query)
 
     async def count_for_user(self, user_id: int) -> int:
         query = (
@@ -55,7 +53,7 @@ class TransactionRepository(BaseModelRepository[Transaction]):
         current_date: Optional[date] = None,
     ) -> Tuple[Optional[date], Optional[date], Optional[date]]:
         if current_date is None:
-            query = select([func.max(transactions.c.on_date)]).where(
+            query = select([func.max(transactions.c.at_date)]).where(
                 transactions.c.user_id == user_id
             )
             current_date = await self.db.fetch_val(query)
@@ -63,13 +61,13 @@ class TransactionRepository(BaseModelRepository[Transaction]):
         if current_date is None:
             return None, None, None
 
-        prev_query = select([func.max(transactions.c.on_date)]).where(
+        prev_query = select([func.max(transactions.c.at_date)]).where(
             transactions.c.user_id == user_id,
-            transactions.c.on_date < current_date,
+            transactions.c.at_date < current_date,
         )
-        next_query = select([func.min(transactions.c.on_date)]).where(
+        next_query = select([func.min(transactions.c.at_date)]).where(
             transactions.c.user_id == user_id,
-            transactions.c.on_date > current_date,
+            transactions.c.at_date > current_date,
         )
 
         prev_date, next_date = await gather(

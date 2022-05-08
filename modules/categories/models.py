@@ -1,18 +1,16 @@
 from datetime import datetime
-from decimal import Decimal
 
 from libs.base_model import BaseModel
-from modules.core import Currency
 
 
-class Account(BaseModel):
+class Category(BaseModel):
     id: int
-    owner_id: int
+    user_id: int
 
     name: str
 
-    balance: Decimal
-    currency: Currency
+    is_income: bool
+    is_outcome: bool
 
     created_at: datetime
     updated_at: datetime

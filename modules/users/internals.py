@@ -1,7 +1,8 @@
+from asyncio import gather
 from typing import Optional
 
-from modules.accounts import create_account
-from modules.accounts.consts import DEFAULT_ACCOUNT_NAME
+from modules.accounts import create_default_account
+from modules.categories import create_default_categories
 
 from .models import User
 from .repository import users_repo
@@ -23,7 +24,10 @@ async def create_or_update_user(
             last_name=last_name,
         )
 
-        await create_account(user.id, DEFAULT_ACCOUNT_NAME)
+        await gather(
+            create_default_account(user.id),
+            create_default_categories(user.id),
+        )
 
     else:
         user.populate(

@@ -1,31 +1,34 @@
 from datetime import date, datetime
 from decimal import Decimal
-from typing import List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union
 
-from .consts import TransactionType
 from .models import Transaction
 from .repository import transactions_repo
 
+if TYPE_CHECKING:
+    from modules.core.consts import Currency
 
-async def create_expense_transaction(
+
+async def create_outcome_transaction(
     user_id: int,
-    account_id: int,
-    amount: Decimal,
+    at_date: Union[date, str],
+    category_id: int,
     comment: Optional[str],
-    on_date: Union[date, str],
-    category: str,
+    account_id: int,
+    currency: 'Currency',
+    amount: Decimal,
 ) -> Transaction:
-    if isinstance(on_date, str):
-        on_date = datetime.strptime(on_date, '%d.%m.%Y').date()
+    if isinstance(at_date, str):
+        at_date = datetime.strptime(at_date, '%d.%m.%Y').date()
 
     return await transactions_repo.create(
         user_id=user_id,
-        account_id=account_id,
-        type=TransactionType.EXPENSE,
-        amount=amount,
+        at_date=at_date,
+        category_id=category_id,
         comment=comment,
-        on_date=on_date,
-        category=category,
+        outcome_account_id=account_id,
+        outcome_currency=currency,
+        outcome=amount,
     )
 
 
@@ -38,24 +41,18 @@ async def get_transactions_by_user(
     limit: Optional[int] = None,
     offset: Optional[int] = None,
 ) -> List[Transaction]:
-    return await transactions_repo.get_for_user(
-        user_id=user_id, limit=limit, offset=offset
-    )
+    return await transactions_repo.get_for_user(user_id=user_id, limit=limit, offset=offset)
 
 
 async def get_transactions_history(
     user_id: int,
-    on_date: Optional[date] = None,
+    at_date: Optional[date] = None,
 ) -> Tuple[Optional[date], Optional[date], Optional[date], List[Transaction]]:
-    prev_date, on_date, next_date = await transactions_repo.get_dates_for_user(
-        user_id, on_date
-    )
+    prev_date, at_date, next_date = await transactions_repo.get_dates_for_user(user_id, at_date)
 
-    if on_date is None:
+    if at_date is None:
         return None, None, None, []
 
-    transactions = await transactions_repo.get_for_user(
-        user_id=user_id, on_date=on_date
-    )
+    transactions = await transactions_repo.get_for_user(user_id=user_id, at_date=at_date)
 
-    return prev_date, on_date, next_date, transactions
+    return prev_date, at_date, next_date, transactions

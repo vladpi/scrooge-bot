@@ -62,12 +62,13 @@ class BaseModelRepository(BaseRepository[Model]):
             )
 
     async def get(self, id_: Any) -> Optional['Model']:
-        return await self._fetch_one(
-            sa.select([self.table]).where(self.pk_field == id_)
-        )
+        return await self._fetch_one(sa.select([self.table]).where(self.pk_field == id_))
 
     async def get_by(self, column: sa.Column, value: Any) -> Optional['Model']:
         return await self._fetch_one(sa.select([self.table]).where(column == value))
+
+    async def get_all_by(self, column: sa.Column, value: Any) -> List['Model']:
+        return await self._fetch_all(sa.select([self.table]).where(column == value))
 
     async def delete(self, id_: Any) -> None:
         query = sa.delete(self.table).where(self.pk_field == id_)

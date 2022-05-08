@@ -20,18 +20,18 @@ class ReportRepository(BaseRepository[CategoryTotal]):
         query = (
             select(
                 [
-                    transactions.c.category,
-                    func.sum(transactions.c.amount).label('total'),
+                    transactions.c.category_id,
+                    func.sum(transactions.c.outcome).label('total'),
                 ]
             )
             .where(
                 and_(
                     transactions.c.user_id == user_id,
-                    transactions.c.on_date >= start_date,
-                    transactions.c.on_date <= end_date,
+                    transactions.c.at_date >= start_date,
+                    transactions.c.at_date <= end_date,
                 )
             )
-            .group_by(transactions.c.category)
+            .group_by(transactions.c.category_id)
             .order_by(literal_column('total').desc())
         )
 

@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from aiogram import Bot
 
     from modules.accounts import Account
+    from modules.categories import Category
     from modules.transactions import Transaction
 
 
@@ -60,8 +61,8 @@ async def wrong_expense_date(bot: 'Bot', to_chat_id: int):
     )
 
 
-async def select_category(bot: 'Bot', to_chat_id: int, categories: List[str]):
-    keyboard = [[KeyboardButton(category)] for category in categories]
+async def select_category(bot: 'Bot', to_chat_id: int, categories: List['Category']):
+    keyboard = [[KeyboardButton(category.name)] for category in categories]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await bot.send_message(
         chat_id=to_chat_id,
