@@ -7,12 +7,41 @@ from sqlalchemy import func, select
 
 from app import database
 from libs.base_repo import BaseModelRepository
+from libs.sql_utils import json_object, json_object_or_none
+from modules.accounts import accounts
+from modules.categories import categories
 
 from .models import Transaction
 from .tables import transactions
 
 
 class TransactionRepository(BaseModelRepository[Transaction]):
+    @property
+    def select_query(self) -> sa.sql.Select:
+        outcome_accounts = accounts.alias('outcome_account')
+        income_accounts = accounts.alias('income_accounts')
+        transactions_with_linked = (
+            self.table.join(categories, categories.c.id == self.table.c.category_id, isouter=True)
+            .join(
+                outcome_accounts,
+                outcome_accounts.c.id == self.table.c.outcome_account_id,
+                isouter=True,
+            )
+            .join(
+                income_accounts,
+                income_accounts.c.id == self.table.c.income_account_id,
+                isouter=True,
+            )
+        )
+        return sa.select(
+            [
+                self.table,
+                json_object(categories).label('category'),
+                json_object_or_none(outcome_accounts).label('outcome_account'),
+                json_object_or_none(income_accounts).label('income_account'),
+            ]
+        ).select_from(transactions_with_linked)
+
     async def get_for_user(
         self,
         user_id: int,
@@ -21,7 +50,7 @@ class TransactionRepository(BaseModelRepository[Transaction]):
         at_date: Optional[date] = None,
     ) -> List['Transaction']:
         query = (
-            select([transactions])
+            self.select_query
             .where(transactions.c.user_id == user_id)
             .order_by(
                 transactions.c.at_date.desc(),
