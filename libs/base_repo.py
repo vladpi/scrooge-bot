@@ -61,7 +61,10 @@ class BaseModelRepository(BaseRepository[Model]):
             )
             pk_value = instance_data.pop(self.pk_field.key)
             id_ = await self.db.fetch_val(
-                sa.update(self.table).where(self.pk_field == pk_value).values(instance_data)
+                sa.update(self.table)
+                .where(self.pk_field == pk_value)
+                .values(instance_data)
+                .returning(self.pk_field)
             )
             return await self.get(id_)  # type: ignore
 
