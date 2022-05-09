@@ -44,31 +44,38 @@ class BaseModelRepository(BaseRepository[Model]):
         self.table = table
         self.pk_field = pk_field
 
+    @property
+    def select_query(self) -> sa.sql.Select:
+        return sa.select([self.table])
+
     async def create(self, **data: Any) -> 'Model':
         async with self.db.transaction():
-            return await self._fetch_one(  # type: ignore
-                insert(self.table).values(data).returning(self.table)
-            )
+            id_ = await self.db.fetch_val(insert(self.table).values(data))
+            return await self.get(id_)  # type: ignore
 
     async def save(self, instance: 'Model') -> 'Model':
         async with self.db.transaction():
-            instance_data = instance.dict()
-            pk_value = instance_data.pop(self.pk_field.key)
-            return await self._fetch_one(  # type: ignore
-                sa.update(self.table)
-                .where(self.pk_field == pk_value)
-                .values(instance_data)
-                .returning(self.table)
+            instance_data = instance.dict(
+                include=set([c.name for c in self.table.c]),
+                exclude=set([c.name for c in self.table.c if c.onupdate is not None]),
             )
+            pk_value = instance_data.pop(self.pk_field.key)
+            id_ = await self.db.fetch_val(
+                sa.update(self.table).where(self.pk_field == pk_value).values(instance_data)
+            )
+            return await self.get(id_)  # type: ignore
+
+    async def get_all(self) -> List['Model']:
+        return await self._fetch_all(self.select_query)
 
     async def get(self, id_: Any) -> Optional['Model']:
-        return await self._fetch_one(sa.select([self.table]).where(self.pk_field == id_))
+        return await self._fetch_one(self.select_query.where(self.pk_field == id_))
 
     async def get_by(self, column: sa.Column, value: Any) -> Optional['Model']:
-        return await self._fetch_one(sa.select([self.table]).where(column == value))
+        return await self._fetch_one(self.select_query.where(column == value))
 
     async def get_all_by(self, column: sa.Column, value: Any) -> List['Model']:
-        return await self._fetch_all(sa.select([self.table]).where(column == value))
+        return await self._fetch_all(self.select_query.where(column == value))
 
     async def delete(self, id_: Any) -> None:
         query = sa.delete(self.table).where(self.pk_field == id_)
