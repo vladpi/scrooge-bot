@@ -2,6 +2,7 @@ from asyncio import gather
 from datetime import date
 from typing import List, Optional, Tuple
 
+import sqlalchemy as sa
 from sqlalchemy import func, select
 
 from app import database
@@ -62,12 +63,16 @@ class TransactionRepository(BaseModelRepository[Transaction]):
             return None, None, None
 
         prev_query = select([func.max(transactions.c.at_date)]).where(
-            transactions.c.user_id == user_id,
-            transactions.c.at_date < current_date,
+            sa.and_(
+                transactions.c.user_id == user_id,
+                transactions.c.at_date < current_date,
+            ),
         )
         next_query = select([func.min(transactions.c.at_date)]).where(
-            transactions.c.user_id == user_id,
-            transactions.c.at_date > current_date,
+            sa.and_(
+                transactions.c.user_id == user_id,
+                transactions.c.at_date > current_date,
+            )
         )
 
         prev_date, next_date = await gather(

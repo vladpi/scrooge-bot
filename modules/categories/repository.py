@@ -13,8 +13,10 @@ class CategoryRepository(BaseModelRepository[Category]):
 
     async def get_by_name(self, user_id: int, name: str) -> Category | None:
         query = sa.select([self.table]).where(
-            self.table.c.user_id == user_id,
-            self.table.c.name == name,
+            sa.and_(
+                self.table.c.user_id == user_id,
+                self.table.c.name == name,
+            ),
         )
         return await self._fetch_one(query)
 
