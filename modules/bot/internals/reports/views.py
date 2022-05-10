@@ -25,7 +25,7 @@ async def report(
         message = f'<b>{report.period_start:%d.%m.%Y} - {report.period_end:%d.%m.%Y}</b>\n\n'
 
     for category_total in report.categories_totals:
-        message += f'<b>{category_total.category_id}:</b> {category_total.total}\n'
+        message += f'<b>{category_total.category.name}:</b> {category_total.total}\n'
 
     day_period_button = InlineKeyboardButton(
         'За день', callback_data=reports_cb.new(period=ReportPeriod.DAY)

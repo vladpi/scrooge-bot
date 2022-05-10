@@ -5,7 +5,9 @@ from sqlalchemy import and_, func, literal_column, select
 
 from app import database
 from libs.base_repo import BaseRepository
-from modules.transactions.tables import transactions
+from libs.sql_utils import json_object
+from modules.categories import categories
+from modules.transactions import transactions
 
 from .models import CategoryTotal
 
@@ -17,13 +19,17 @@ class ReportRepository(BaseRepository[CategoryTotal]):
         start_date: date,
         end_date: date,
     ) -> List[CategoryTotal]:
+        transactions_with_categories = transactions.join(
+            categories, categories.c.id == transactions.c.category_id, isouter=True
+        )
         query = (
             select(
                 [
-                    transactions.c.category_id,
+                    json_object(categories).label('category'),
                     func.sum(transactions.c.outcome).label('total'),
                 ]
             )
+            .select_from(transactions_with_categories)
             .where(
                 and_(
                     transactions.c.user_id == user_id,
@@ -31,7 +37,7 @@ class ReportRepository(BaseRepository[CategoryTotal]):
                     transactions.c.at_date <= end_date,
                 )
             )
-            .group_by(transactions.c.category_id)
+            .group_by(categories.c.id)
             .order_by(literal_column('total').desc())
         )
 

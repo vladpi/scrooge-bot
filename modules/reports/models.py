@@ -3,12 +3,13 @@ from decimal import Decimal
 from typing import List
 
 from libs.base_model import BaseModel
+from modules.categories import Category
 
 from .consts import ReportPeriod
 
 
 class CategoryTotal(BaseModel):
-    category_id: int  # FIXME ???
+    category: Category
     total: Decimal
 
 
