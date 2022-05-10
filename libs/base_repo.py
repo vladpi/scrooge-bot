@@ -50,7 +50,7 @@ class BaseModelRepository(BaseRepository[Model]):
 
     async def create(self, **data: Any) -> 'Model':
         async with self.db.transaction():
-            id_ = await self.db.fetch_val(insert(self.table).values(data))
+            id_ = await self.db.fetch_val(insert(self.table).values(data).returning(self.pk_field))
             return await self.get(id_)  # type: ignore
 
     async def save(self, instance: 'Model') -> 'Model':
